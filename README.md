@@ -1,0 +1,1 @@
+# ajaib.co.id-pengkinian-data
